@@ -1,0 +1,128 @@
+swagger: "2.0"
+info:
+  title: "Pizza API"
+  description: "API for managing pizzas"
+  version: "1.0.0"
+  contact:
+    name: "Mariah Ojeda"
+    email: "mariahojeda@live.com"
+    url: "https://www.linkedin.com/in/mariahojeda/"
+basePath: "/api"
+schemes:
+  - "http"
+  - "https"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: Authorization
+    in: header
+
+definitions:
+  Pizza:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "The name of the pizza"
+      toppings:
+        type: "array"
+        description: "The toppings of the pizza"
+        items:
+          type: "string"
+    required:
+      - name
+      - toppings
+  SuccessResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        enum:
+          - "success"
+      message:
+        type: "string"
+  ErrorResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        enum:
+          - "error"
+      message:
+        type: "string"
+
+paths:
+  /pizzas:
+    post:
+      summary: "Create a new pizza"
+      description: "Endpoint for creating a new pizza"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Pizza object"
+          required: true
+          schema:
+            $ref: "#/definitions/Pizza"
+          example:
+            name: "Margherita"
+            toppings:
+              - "Tomato sauce"
+              - "Mozzarella cheese"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+          example:
+            status: "success"
+            message: "Pizza created successfully"
+        "400":
+          description: "Invalid input"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          example:
+            status: "error"
+            message: "Invalid input"
+      tags:
+        - "Pizza"
+
+  /pizzas/{id}:
+    delete:
+      summary: "Delete a pizza by ID"
+      description: "Endpoint for deleting a pizza by ID"
+      parameters:
+        - in: "path"
+          name: "id"
+          description: "ID of the pizza to be deleted"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/SuccessResponse"
+          example:
+            status: "success"
+            message: "Pizza deleted successfully"
+        "404":
+          description: "Pizza not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          example:
+            status: "error"
+            message: "Pizza not found"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+          example:
+            status: "error"
+            message: "Internal server error"
+      tags:
+        - "Pizza"
+
